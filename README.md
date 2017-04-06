@@ -5,7 +5,7 @@
     height="250"
   />
   <br />
-  dogstack
+  [dogstack](https://github.com/enspiral-root-systems/dogstack)
 </h1>
 
 <h4 align="center">
