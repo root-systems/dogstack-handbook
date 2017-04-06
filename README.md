@@ -5,7 +5,9 @@
     height="250"
   />
   <br />
-  [dogstack](https://github.com/enspiral-root-systems/dogstack)
+  <a href='https://github.com/enspiral-root-systems/dogstack'>
+    dogstack
+  </a>
 </h1>
 
 <h4 align="center">
