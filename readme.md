@@ -16,7 +16,7 @@
 
 <h6 align="center">
   🐱 see also <a href='https://github.com/enspiral-root-systems/cat-stack'>catstack</a>, dogstack's smarter, slimmer, more cunning partner in crime
-</h4>
+</h6>
 
 ## features
 
