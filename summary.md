@@ -1,8 +1,8 @@
 # Summary
 
-- [Introduction](README.md)
+- [Introduction](readme.md)
 - Guides
-- [Glossary](GLOSSARY.md)
+- [Glossary](glossary.md)
 - Meta
   - [Change Log](changelog.md)
   - [Contributing](contributing.md)
