@@ -22,7 +22,6 @@
 - abstracts away the app plumbing that you don't want to write again, and let's you focus on features
 - prescribes enough opinion to reduce friction for your team
 - is [omakase](https://www.youtube.com/watch?v=E99FnoYqoII), modules are hand-picked by expert chefs to deliver a consistent taste throughout
-- gives prescriptive opinions for how to structure production-scale apps, to reduce friction for your team
 
 ## examples
 
