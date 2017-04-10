@@ -90,7 +90,7 @@
 
 ## guides
 
-- TODO how to install node.js and package manager
+- [How To Install Node.js](./guides/how-to-install-js.md)
 - TODO how to create a new `dogstack` app
 - TODO how to setup a Postgres database
 - TODO how to do authentication for your app
