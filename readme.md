@@ -88,6 +88,11 @@
 - TODO mobile using [react-native]
 - TODO desktop using [electron]
 
+## conventions
+
+- [File structure: topic -> type -> name](conventions/file-structure.md)
+- TODO pluralize by adding 's', no exceptions
+
 ## guides
 
 - [How to install Node.js](guides/how-to-install-js.md)
@@ -102,10 +107,6 @@
 - TODO how to setup scheduled server tasks
 - TODO how to send emails from your app
 - TODO how to do a payment in your app
-
-## other opinions
-
-- TODO pluralize by adding 's', no exceptions
 
 ## prior art
 

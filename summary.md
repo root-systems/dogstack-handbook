@@ -1,6 +1,8 @@
 # Summary
 
 - [Introduction](readme.md)
+- Conventions
+  - [File structure: topic -> type -> name](conventions/file-structure.md)
 - Guides
   - [How to install Node.js](guides/how-to-install-js.md)
   - [How to create a new `dogstack` app](guides/how-to-create-app.md)
