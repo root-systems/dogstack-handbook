@@ -43,7 +43,7 @@
 ## conventions
 
 - [File structure: topic -> type -> name](conventions/file-structure.md)
-- TODO pluralize by adding 's', no exceptions
+- [Pluralize by adding 's', no exceptions](conventions/plurals.md)
 
 ## guides
 
