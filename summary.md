@@ -1,6 +1,7 @@
 # Summary
 
 - [Introduction](readme.md)
+- [Modules](modules.md)
 - Conventions
   - [File structure: topic -> type -> name](conventions/file-structure.md)
 - Guides
