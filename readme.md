@@ -92,7 +92,7 @@
 
 - [How to install Node.js](./guides/how-to-install-js.md)
 - [How to create a new `dogstack` app](./guides/how-to-create-app.md)
-- TODO how to setup a Postgres database
+- [How to setup a Postgres database](./guides/how-to-setup-sql-db.md)
 - TODO how to do authentication for your app
 - TODO how to do styled components
 - TODO how to create real-time data services
