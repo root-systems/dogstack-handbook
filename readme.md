@@ -90,8 +90,8 @@
 
 ## guides
 
-- [How To Install Node.js](./guides/how-to-install-js.md)
-- TODO how to create a new `dogstack` app
+- [How to install Node.js](./guides/how-to-install-js.md)
+- [How to create a new `dogstack` app](./guides/how-to-create-app.md)
 - TODO how to setup a Postgres database
 - TODO how to do authentication for your app
 - TODO how to do styled components
