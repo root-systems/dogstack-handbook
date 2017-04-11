@@ -44,20 +44,20 @@ A type is a grouping of modules that are related by the shape of export, as in h
 
 Contrary to topics, types are more or less objective and predetermined by `dogstack`.
 
-- hoc ([higher-order components](https://facebook.github.io/react/docs/higher-order-components.html))
-- type ([`tcomb` type](https://github.com/gcanti/tcomb))
-- style ([`fela` rule](http://fela.js.org/docs/basics/Rules.html))
-- service ([`feathers` service](https://docs.feathersjs.com/services/readme.html))
 - sync (helper function that returns value or throws error)
 - async (helper function that returns promise)
+- type ([`tcomb` type](https://github.com/gcanti/tcomb))
+- style ([`fela` rule](http://fela.js.org/docs/basics/Rules.html))
 - action ([`redux` action creator](http://redux.js.org/docs/basics/Actions.html))
 - reducer ([`redux` reducer](http://redux.js.org/docs/basics/Reducers.html))
 - getter ([`reselect` selector](https://github.com/reactjs/reselect))
 - component ([presentational](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0))
 - container ([data](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0))
+- hoc ([higher-order components](https://facebook.github.io/react/docs/higher-order-components.html))
+- route ([`react-router`](https://github.com/ReactTraining/react-router) `<Route />`)
+- service ([`feathers` service](https://docs.feathersjs.com/services/readme.html))
 - migration ([`knex` migration](http://knexjs.org/#Migrations))
 - seed ([`knex` seed](http://knexjs.org/#Seeds))
-- route ([`react-router`](https://github.com/ReactTraining/react-router) `<Route />`)
 
 ## What is a name?
 
