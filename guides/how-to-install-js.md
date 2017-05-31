@@ -26,7 +26,7 @@ For more help or instructions, see the [`nvm` README](https://github.com/creatio
 
 Once we have `nvm` installed, we can use it to install the [long-term stable](https://github.com/nodejs/LTS) version of Node.js.
 
-```
+```sh
 nvm install lts
 nvm use lts
 nvm alias default lts
@@ -34,15 +34,11 @@ nvm alias default lts
 
 You should now be able to run `node` (a Node JavaScript interpreter) or `npm` (the Node Package Manager).
 
-## 3. Install `yarn`
+For best results, let's upgrade `npm` to the latest version.
 
-Rather than use `npm` to manage our dependencies, we recommend `yarn`. To do this, we need to use `npm` to install `yarn`. :cat:
-
+```sh
+npm install -g npm@latest
 ```
-npm install -g yarn@latest
-```
-
----
 
 Now we're ready to go, welcome to the wild world of Node.js, let the festivities begin!
 
