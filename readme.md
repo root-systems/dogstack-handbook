@@ -20,16 +20,31 @@
 
 ## features
 
-- provides generators for scaffolding apps made of popular libraries
+- is [omakase](https://www.youtube.com/watch?v=E99FnoYqoII), modules are hand-picked by expert chefs to deliver a consistent taste throughout
+- provides a [forkable example](https://github.com/root-systems/dogstack-example) to get you up and running in no time!
 - abstracts away the app plumbing that you don't want to write again, and let's you focus on features
 - prescribes enough opinion to reduce friction for your team
-- is [omakase](https://www.youtube.com/watch?v=E99FnoYqoII), modules are hand-picked by expert chefs to deliver a consistent taste throughout
+- includes modules for the user experience you really need: registration flow, sign in flow, group management, role-based access controls, etc
 
 ## examples
 
-- [dogstack.herokuapp.com](https://dogstack.herokuapp.com/): [dogstack/example](https://github.com/dogstack/example) deployed to heroku
+- [`root-systems/dogstack-example`](https://github.com/root-systems/dogstack-example): a simple forkable example with common boilerplate
+- [`root-systems/cobuy`](https://github.com/root-systems/cobuy): our open source product for consumer groups to coordinate buying quality goods for a cheaper price
+- [`ahdinosaur/resourceful`](https://github.com/ahdinosaur/resourceful): an experiment in personal inventory management
 
-## [modules](modules.md)
+## getting started
+
+to get started, fork [`dogstack-example`](https://github.com/root-systems/dogstack-example)
+
+## stack
+
+framework: [`dogstack`](https://github.com/root-systems/dogstack)
+
+plugin ecosystem:
+
+- [`dogstack-agents`](https://github.com/root-systems/dogstack-agents)
+
+see [`stack.md`](stack.md) for the full set of modules included in dogstack.
 
 ## distributions
 

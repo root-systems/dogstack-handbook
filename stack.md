@@ -2,23 +2,29 @@
 
 ## data
 
-- schemas: [tcomb](https://github.com/gcanti/tcomb)
+- [json schema](https://spacetelescope.github.io/understanding-json-schema/)
+  - [ajv](https://github.com/epoberezkin/ajv)
+  - [json-schema-faker](https://github.com/json-schema-faker/json-schema-faker/#faking-values)
 - manipulation: [ramda](http://ramdajs.com/docs/)
 
 ## user interface
 
 - view components: [react](https://facebook.github.io/react/)
-- view component tests: [enzyme](http://airbnb.io/enzyme/)
+- view component library: [material-ui](http://www.material-ui.com/)
 - view styles and themes: [fela](http://fela.js.org/)
 - state store: [redux](http://redux.js.org)
 - data selectors: [reselect](https://github.com/reactjs/reselect)
-- action / reducer helpers: [redux-actions](https://github.com/acdlite/redux-actions)
-- async actions / effects: ??? (redux-thunk or redux-loop or redux-observable or ...)
+- action creators: [@f/create-action](https://github.com/micro-js/create-action)
+- action updaters: [redux-fp](https://redux-observable.js.org/)
+- async actions: [redux-observable](https://redux-observable.js.org/)
 - client actions: [feathers-action](https://github.com/ahdinosaur/feathers-action)
+- client containers: [feathers-action-react](https://github.com/ahdinosaur/feathers-action-react)
 - router: [react-router](https://github.com/ReactTraining/react-router)
 - authentication: [redux-auth-wrapper](https://github.com/mjrussell/redux-auth-wrapper)
 - forms: [redux-form](http://redux-form.com/)
+- form field library: [redux-form-material-ui](https://github.com/erikras/redux-form-material-ui)
 - logging: [redux-logger](https://www.npmjs.com/package/redux-logger)
+- i18n: [react-intl](https://github.com/yahoo/react-intl)
 
 ## data services
 
@@ -38,31 +44,31 @@
 ## database
 
 - Postgres
-- FUTURE [Samza](https://www.confluent.io/blog/turning-the-database-inside-out-with-apache-samza/)
 
 ## command-line interface
 
-- prompts: [inquirer](https://github.com/SBoudrias/Inquirer.js)
-- task runner: [gulp](https://github.com/gulpjs/gulp)
-- file transformer: [gulp](https://github.com/gulpjs/gulp)
+- TODO prompts: [inquirer](https://github.com/SBoudrias/Inquirer.js)
+- TODO task runner: [gulp](https://github.com/gulpjs/gulp)
+- TODO file transformer: [gulp](https://github.com/gulpjs/gulp)
 
 ## tests
 
 - linter: [standard](https://github.com/feross/standard)
 - test runner: [ava](https://github.com/avajs/ava)
-- executable specifications: [cucumber](https://github.com/cucumber/cucumber-js)
-- headless browser: electron
+- view component tests: [enzyme](http://airbnb.io/enzyme/)
+- TODO executable specifications: [cucumber](https://github.com/cucumber/cucumber-js)
+- TODO headless browser: electron
 
 ## dev tools
 
 - transpiler: [babel](https://babeljs.io/)
-- git hooks: [husky](https://github.com/typicode/husky)
-- release versioning
-- changelog helpers
-- documentation helpers
+- TODO git hooks: [husky](https://github.com/typicode/husky)
+- TODO release versioning
+- TODO changelog helpers
+- TODO documentation helpers
 
 ## ops tools
 
-- portable containers: docker
-- process management: docker
-- crash reporting: 
+- TODO portable containers: docker
+- TODO process management: docker
+- TODO crash reporting: 
