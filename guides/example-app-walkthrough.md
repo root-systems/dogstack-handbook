@@ -66,11 +66,147 @@ Well, you're in for a treat. Although there is a lot of boilerplate, it's all th
 
 Hopefully everything is obvious and readable 😉, but lets walk you through some of the files anyway.
 
-TODO: Where do I even start? Could start with `server.js` and briefly explain feathers, then deep dive when we actually use it. Should finish on `layout.js` so we can move onto creating features 🐶
+#### server.js - required by dogstack
+
+dogstack is using the [feathers](https://feathersjs.com/) framework. Feathers makes creating and consuming a real-time API super easy. We'll get into more depth about Feathers and what it can do later, but for now, think of it as a way to interact with our API.
+
+In this file you can list all of your [feathers services](https://docs.feathersjs.com/api/services.html)
+
+We'll come back soon to create our first service.
+
+#### routes.js - required by dogstack
+
+dogstack is using [React routes](https://github.com/ReactTraining/react-router) for our routing
+
+We're in the process of refactoring the routes and navigation into it's own module, but for now we've included these files into this boilerplate, so don't worry if you don't understand what's going on in these files:
+
+- `app/getters.js` - This is used to map our routes to the Layout component as props.
 
 
+---
+dogstack expects `routes.js` to be an exported routes configuration in this format:
+
+```js
+
+export default  [
+  {
+    name: 'home',
+    path: '/',
+    exact: true,
+    Component: Home,
+    selector: getIsNotAuthenticated,
+    navigation: {
+      title: 'app.home',
+      icon: 'fa fa-home'
+    }
+  },
+  {
+    name: 'signIn',
+    path: '/sign-in',
+    exact: true,
+    Component: UserIsNotAuthenticated(SignIn),
+    navigation: {
+      title: 'agents.signIn',
+      selector: getIsNotAuthenticated,
+      icon: 'fa fa-sign-in'
+    }
+  }
+]
+```
+
+You can read more into react-router and find the docs [here](https://reacttraining.com/react-router/web/guides/philosophy)
+
+#### store.js - required by dogstack
+
+This is for our [redux]() store config.
+
+- [`updater`(add link to updater.js below)](): a function of shape `action => state => nextState`, combined from each topic using [`redux-fp.concat`](https://github.com/rvikmanis/redux-fp/blob/master/docs/API.md#concat)
+- [`epic`(add link to epic below)](): a function of shape `(action$, store, { feathers }) => nextAction$`, combined from each topic using [`combineEpics`](https://redux-observable.js.org/docs/api/combineEpics.html)
+- [`middlewares`](http://redux.js.org/docs/Glossary.html#middleware): an array of functions of shape `store => next => action`
+- [`enhancers`](http://redux.js.org/docs/Glossary.html#store-enhancer): an array of functions of shape `createStore => createEnhancedStore
+
+```js
+// store.js
+import updater from './updater'
+import epic from './epic'
+
+const middlewares = []
+const enhancers = []
+
+export default {
+  updater,
+  epic,
+  middlewares,
+  enhancers
+}
+```
 
 
+#### updater.js
+
+> An Updater is a type of function that takes an action and returns another function that takes the state and produces a result. Yes, they are just curried reducers with reversed argument order.
+
+If you're used to the term `reducer`, you can see in our `updater.js` file we have a function that converts reducers to updaters
+
+```js
+function reducerToUpdater (reducer) {
+  return action => state => reducer(state, action)
+}
+``` 
+
+
+This file combines all of our apps `updaters` using [`redux-fp.concat`](https://github.com/rvikmanis/redux-fp/blob/master/docs/API.md#concat). Think of this as your 'root updater'. For any updaters to interact with the state, they must be in this file.
+
+#### epic.js
+
+This file exports a function of shape `(action$, store, { feathers }) => nextAction$`, combined from each topic using [`combineEpics`](https://redux-observable.js.org/docs/api/combineEpics.html)
+
+> An Epic is a function which takes a stream of actions and returns a stream of actions. Actions in, actions out.
+
+Need this looked at, still confusing to me after looking into `dogstack-agents`
+The main way dogstack uses epics is with Feathers. We can subscribe to events, the epic will define what events we want to subscribe to, and what happens when the event is triggered.
+
+Luckily [feathers-action](https://www.npmjs.com/package/feathers-action) does most of the heavy lifting for us and this will be the main way to create epics, but it helps to know the basics of [Observables and RxJs](http://reactivex.io/rxjs/manual/overview.html)
+
+#### client.js - required by dogstack
+
+This file is used for our [`feathers` client](https://docs.feathersjs.com/api/client.html) configuration(yes! feathers is also a client) so that know how to communicate with our feathers server and connect things like authentication.
+
+This file is used to define what services we want the feathers client to use.
+
+`services`: export an array of functions that will be run with [`client.configure(plugin)`](https://docs.feathersjs.com/api/application.html#configurecallback)
+
+#### root.js
+
+To ask Mikey - what's the purpose of styleNode in dogstack (in root.js)? I see where we use appNode, but don't see styleNode being used at all?
+
+#### style.js required by dogstack
+
+export configuration for [`fela`](https://github.com/rofrischmann/fela)
+
+- `fontNode`: query selector string or dom node to render app fonts
+- `theme`: object passsed to `<FelaThemeProvider theme={theme} />`
+- `setup`: function of shape `(renderer) => {}`
+
+We're using [`fela`](https://github.com/rofrischmann/fela) to style dogstack apps. Fela lets us create state-driven styling to create flexible and dynamic styes. We'll dive into styling with Fela later in this walkthrough.
+
+#### intl.js - required by dogstack
+
+dogstack is using [react-intl](https://github.com/yahoo/react-intl) to handle Internationalisation of our app. react-intl makes creating an app for users that read a number of different langagues super easy.
+
+At the moment you can see the only langague we're using at the moment is English. By using react-intl it makes it incredibly easy at any point later in the lifecycle of your app you need to cater for another langague. You add an extra locale json file to `app/locales` and you're ready to go.
+
+Even if you're currently not planning to cater for different langagues we reccoemdn you use this feature. For a small amount of effort you recive a large reward later on.
+All it takes is to start using the [`FormattedMessage`](https://github.com/yahoo/react-intl/wiki/Components#string-formatting-components) component where you're using text.
+
+[react-intl](https://github.com/yahoo/react-intl) also has a bunch of other features other than translation, feel free to [check out the docs](https://github.com/yahoo/react-intl) to see what other magic it does
+
+#### layout.js - required by dogstack
+
+And last, but not least `layout.js`
+
+This is our main layout React component, which accepts `routes` as props.
+We're also in the process of refactoring and abstracting how this layout works in the future.
 
 ## Show me the dogs 🐶
 Now let's have a look at what we've got!
