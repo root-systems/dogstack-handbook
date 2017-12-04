@@ -209,10 +209,60 @@ And last, but not least `layout.js`
 This is our main layout React component, which accepts `routes` as props.
 We're also in the process of refactoring and abstracting how this layout works in the future.
 
-## Show me the dogs 🐶
+
+## Let's start writing
+
+### Create component
+Let's start by creating a simple component that displays some text, our "Hello World", if you would.
+
+Create a `Dog.js` located at `/dogs/components/`
+
+`Dog.js` will look like:
+```js
+import h from 'react-hyperscript'
+
+const Dog = (props) => {
+  return (
+    h('p', {}, 'Woof!')
+  )
+}
+
+export default Dog
+```
+
+The first thing you'll see is that we're using `hyperscript` instead of `JSX` to define our DOM elements. We do this because it feels natural to be writing javascript in a javascript file and you have the full power of javascript to use with your elements. You can read more on why [here](https://medium.com/@jador/jsx-4b978fbeb290)
+
+Read the `react-hyperscript` docs [here](https://github.com/mlmorg/react-hyperscript)
+
+### Add a route
+
+Add the following so `/routes.js` looks like:
+
+```js
+import { Route } from 'react-router-dom'
+import React from 'react'
+
+import Dog from './dogs/components/Dog'
+
+export default [
+  {
+    name: 'dog',
+    path: '/',
+    exact: true,
+    Component: Dog,
+    navigation: {
+      title: 'dogs.dog',
+      icon: 'fa fa-paw'
+    }
+  }
+]
+```
+
+### Show me the dogs 🐶
 Now let's have a look at what we've got!
 
 `npm run dev`
 
 ![step one](https://i.imgur.com/NkrJTPH.png)
-That's not a dog...
+
+Well, that's de
