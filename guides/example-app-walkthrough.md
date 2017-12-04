@@ -163,8 +163,7 @@ This file exports a function of shape `(action$, store, { feathers }) => nextAct
 
 > An Epic is a function which takes a stream of actions and returns a stream of actions. Actions in, actions out.
 
-Need this looked at, still confusing to me after looking into `dogstack-agents`
-The main way dogstack uses epics is with Feathers. We can subscribe to events, the epic will define what events we want to subscribe to, and what happens when the event is triggered.
+Epics (via [redux-observable](https://github.com/redux-observable/redux-observable)) are an abstraction in the same space as [redux-thunk](https://github.com/gaearon/redux-thunk) or [redux-saga](https://github.com/redux-saga/redux-saga). It's meant to address the functionality missing in redux for async actions. Epics allow us to observe the stream of actions, so we can do async operations like fetching or saving data, by listening for when the initial action is dispatched, then dispatching a series of sync (update) actions based on the progress of the async operation.
 
 Luckily [feathers-action](https://www.npmjs.com/package/feathers-action) does most of the heavy lifting for us and this will be the main way to create epics, but it helps to know the basics of [Observables and RxJs](http://reactivex.io/rxjs/manual/overview.html)
 
@@ -176,9 +175,11 @@ This file is used to define what services we want the feathers client to use.
 
 `services`: export an array of functions that will be run with [`client.configure(plugin)`](https://docs.feathersjs.com/api/application.html#configurecallback)
 
-#### root.js
+#### root.js - required by dogstack
 
-To ask Mikey - what's the purpose of styleNode in dogstack (in root.js)? I see where we use appNode, but don't see styleNode being used at all?
+This file is used for our root React component configuration
+
+- `appNode`: query selector string or dom node to render app content
 
 #### style.js required by dogstack
 
