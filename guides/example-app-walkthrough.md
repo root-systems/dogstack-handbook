@@ -258,6 +258,20 @@ export default [
 ]
 ```
 
+To put it simply, when the url matches `/` the app will render our `Dog` component.
+Most of what's in the exported array is required by react-router ([docs here](https://reacttraining.com/react-router/web/api/Route))
+
+`navigation` is how dogstack renders the Drawer Navigation items on the side. 
+
+- `title`  You can see that we're using `react-intl` to render what text `dogs.dog` will display depending on the language of the browser.
+Let's add what text dogs.dog should be. Let's add the following line to the object in `app/locales/en.json`
+
+```js
+"dogs.dog": "dog"
+```
+- `icon` The icon that the Drawer Navigation item will show along the title. We're using Font Awesome for our icon class names. [Here's the extensive list](http://fontawesome.io/icons/) of icons you can use.
+
+
 ### Show me the dogs 🐶
 Now let's have a look at what we've got!
 
@@ -265,4 +279,4 @@ Now let's have a look at what we've got!
 
 ![step one](https://i.imgur.com/NkrJTPH.png)
 
-Well, that's de
+Well. That's a start.
