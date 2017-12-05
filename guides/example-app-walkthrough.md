@@ -64,7 +64,7 @@ You can read more about what topics, types and names are [here](https://dogstack
 ### There's so many files, what do they all do?!
 Well, you're in for a treat. Although there is a lot of boilerplate, it's all there intentionally. You'll regularly find files less than 10 lines long this is because dogstack is heavily abstracted and focuses on everything being [obvious and readable.](https://github.com/reactjs/redux/issues/2295)
 
-Hopefully everything is obvious and readable 😉, but lets walk you through some of the files anyway.
+Hopefully everything is obvious and readable :wink:, but lets walk you through some of the files anyway.
 
 #### server.js - required by dogstack
 
@@ -279,4 +279,167 @@ Now let's have a look at what we've got!
 
 ![step one](https://i.imgur.com/NkrJTPH.png)
 
-Well. That's a start.
+Well, that's a start.
+
+## Interact with a feathers database
+
+### Add a `dogs` table
+Our next step is create and consume our feathers api.
+
+Let's start with creating a `dogs` tables in our database. We do this via [Knex](http://knexjs.org/#Migrations-CLI) and the cli. Knex lets us create SQL queries via javascript.
+
+Create our first migration by running 
+
+`npm run db migrate:make add_dog_table`
+
+This will create a migration file in the `migrations` folder that has a name  similar to this: `20171205121911_add_dog_table.js`
+
+Add to the file so it looks like:
+
+```js
+exports.up = function (knex, Promise) {
+  return knex.schema.createTableIfNotExists('dogs', function (table) {
+    table.increments('id')
+    table.string('name')
+  })
+}
+
+exports.down = function (knex, Promise) {
+  return knex.schema.dropTableIfExists('dogs')
+}
+```
+
+`exports.up` run your migrations and `exports.down` run when migrations are [rolled back](http://knexjs.org/#Migrations-rollback) or when a migration fails. Make sure this function reverts everything done in your `exports.up`
+
+[Here's](http://knexjs.org/#Schema) the wide range of things you can do with the Knex schema builder.
+
+### Add a module with `feathers-action`
+
+Create a `dogs/index.js` file that looks like this
+
+```js
+import createModule from 'feathers-action'
+
+const module = createModule('dogs')
+
+export const actions = module.actions
+export const updater = module.updater
+export const epic = module.epic
+```
+
+- actions - object where keys are method names (find, get, create, ...). These will be used to do CRUD actions later.
+- [updater](#updaters.js)
+- [epic](#epics.js)
+
+Now let's use the updater and epic we just created (we'll use the actions soon).
+
+#### updater
+
+```js
+// updater.js
+ import { concat, updateStateAt } from 'redux-fp'
+ import { routerReducer } from 'react-router-redux'
+ 
+import { updater as dogs } from './dogs'
+
+ const router = updateStateAt('router', reducerToUpdater(routerReducer))
+ 
+ export default concat(
+   dogs,
+   router
+ )
+```
+#### epic
+
+```js
+// epics.js
+ import { combineEpics } from 'redux-observable'
+ 
+ import { epic as dogs } from './dogs'
+
+ export default combineEpics(
+  dogs
+ )
+```
+
+### Create a `feathers` service
+
+Now let's create a [feathers service](https://docs.feathersjs.com/api/services.html) for `dogs`
+
+Create a `dogs/service.js` with the following:
+```js
+const feathersKnex = require('feathers-knex')
+
+module.exports = function () {
+  const app = this
+  const db = app.get('db')
+
+  const name = 'dogs'
+  const options = { Model: db, name }
+
+  app.use(name, feathersKnex(options))
+  app.service(name).hooks(hooks)
+}
+
+const hooks = {
+  before: {},
+  after: {},
+  error: {}
+}
+```
+
+This file is creating a basic feathers service along with some empty [hooks](https://docs.feathersjs.com/api/hooks.html). This if these services as your CRUD methods.
+
+Your `name` must match the name of the table we created above.
+
+From the feathers docs:
+> Hooks are pluggable middleware functions that can be registered before, after or on errors of a service method. You can register a single hook function or create a chain of them to create complex work-flows.
+
+We won't go into hooks in this walkthrough, but you can see how we're using hooks with our implementation of dogstack, Cobuy. [Check out our `ordering` service hooks](https://github.com/root-systems/cobuy/blob/master/ordering/services/orders.js)
+
+#### Add to server.js
+
+With every service we create, it must be added to `/service.js`
+
+```js
+// service.js
+ const services = [
+  require('./dogs/service')
+ ]
+ 
+ export default {
+  services
+}
+```
+
+### Create a getter
+
+TODO:
+- what is a getter?
+- intro to reselect
+- intro to ramba
+- `props.match.params`?
+
+`/dogs/getters.js`
+```js
+import { createSelector, createStructuredSelector } from 'reselect'
+import { prop } from 'ramda'
+
+export const getDogs = (state) => state.dogs
+export const getCurrentDogId = (state, props) => props.match.params.dogId
+
+export const getCurrentDog = createSelector(
+  getCurrentDogId,
+  getDogs,
+  prop
+)
+
+export const getIndexProps = createStructuredSelector({
+  dogs: getDogs
+})
+
+
+export const getShowProps = createStructuredSelector({
+  dog: getCurrentDog
+})
+```
