@@ -32,19 +32,18 @@ Before we start, please
 Let's start by cloning our example repo
 
 `git clone git://github.com/root-systems/dogstack-example`
+`git checkout blank-walkthrough`
 
 Installing the dependencies
 ```shell
 cd dogstack-example
 npm install
-
 ```
 
 and setting up the database for the first time
 ```shell
 npm run db migrate:latest
 npm run db seed:run
-
 ```
 
 Now that we've set up the scaffolding of our projects, let's dive in and see what we've got.
@@ -312,6 +311,11 @@ exports.down = function (knex, Promise) {
 `exports.up` run your migrations and `exports.down` run when migrations are [rolled back](http://knexjs.org/#Migrations-rollback) or when a migration fails. Make sure this function reverts everything done in your `exports.up`
 
 [Here's](http://knexjs.org/#Schema) the wide range of things you can do with the Knex schema builder.
+
+Now run `npm run burnthedb`
+This will delete everything in your database and run the migrations. If you're ever having data issues while debugging/developing, this is a great script to run.
+
+(there's also `npm run burnthemall` that clears out and reinstalls npm packages)
 
 ### Add a module with `feathers-action`
 
