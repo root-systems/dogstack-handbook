@@ -86,7 +86,7 @@ We're in the process of refactoring the routes and navigation into it's own modu
 ---
 dogstack expects `routes.js` to be an exported routes configuration in this format:
 
-```js
+```javascript
 
 export default  [
   {
@@ -125,7 +125,7 @@ This is for our [redux]() store config.
 - [`middlewares`](http://redux.js.org/docs/Glossary.html#middleware): an array of functions of shape `store => next => action`
 - [`enhancers`](http://redux.js.org/docs/Glossary.html#store-enhancer): an array of functions of shape `createStore => createEnhancedStore
 
-```js
+```javascript
 // store.js
 import updater from './updater'
 import epic from './epic'
@@ -148,7 +148,7 @@ export default {
 
 If you're used to the term `reducer`, you can see in our `updater.js` file we have a function that converts reducers to updaters
 
-```js
+```javascript
 function reducerToUpdater (reducer) {
   return action => state => reducer(state, action)
 }
@@ -218,7 +218,7 @@ Let's start by creating a simple component that displays some text, our "Hello W
 Create a `Dog.js` located at `/dogs/components/`
 
 `Dog.js` will look like:
-```js
+```javascript
 import h from 'react-hyperscript'
 
 const Dog = (props) => {
@@ -238,7 +238,7 @@ Read the `react-hyperscript` docs [here](https://github.com/mlmorg/react-hypersc
 
 Add the following so `/routes.js` looks like:
 
-```js
+```javascript
 import { Route } from 'react-router-dom'
 import React from 'react'
 
@@ -296,7 +296,7 @@ This will create a migration file in the `migrations` folder that has a name  si
 
 Add to the file so it looks like:
 
-```js
+```javascript
 exports.up = function (knex, Promise) {
   return knex.schema.createTableIfNotExists('dogs', function (table) {
     table.increments('id')
@@ -317,7 +317,7 @@ exports.down = function (knex, Promise) {
 
 Create a `dogs/index.js` file that looks like this
 
-```js
+```javascript
 import createModule from 'feathers-action'
 
 const module = createModule('dogs')
@@ -335,23 +335,28 @@ Now let's use the updater and epic we just created (we'll use the actions soon).
 
 #### updater
 
-```js
+```javascript
 // updater.js
- import { concat, updateStateAt } from 'redux-fp'
- import { routerReducer } from 'react-router-redux'
- 
+import { concat, updateStateAt } from 'redux-fp'
+import { routerReducer } from 'react-router-redux'
+
 import { updater as dogs } from './dogs'
 
- const router = updateStateAt('router', reducerToUpdater(routerReducer))
- 
- export default concat(
-   dogs,
-   router
- )
+const router = updateStateAt('router', reducerToUpdater(routerReducer))
+
+export default concat(
+  dogs,
+  router
+)
+
+function reducerToUpdater (reducer) {
+  return action => state => reducer(state, action)
+}
+
 ```
 #### epic
 
-```js
+```javascript
 // epics.js
  import { combineEpics } from 'redux-observable'
  
@@ -367,7 +372,7 @@ import { updater as dogs } from './dogs'
 Now let's create a [feathers service](https://docs.feathersjs.com/api/services.html) for `dogs`
 
 Create a `dogs/service.js` with the following:
-```js
+```javascript
 const feathersKnex = require('feathers-knex')
 
 module.exports = function () {
@@ -401,45 +406,197 @@ We won't go into hooks in this walkthrough, but you can see how we're using hook
 
 With every service we create, it must be added to `/service.js`
 
-```js
-// service.js
- const services = [
+```javascript
+// server.js
+const services = [
   require('./dogs/service')
- ]
- 
- export default {
+]
+
+export default {
   services
 }
+
 ```
 
 ### Create a getter
 
-TODO:
-- what is a getter?
-- intro to reselect
-- intro to ramba
-- `props.match.params`?
+In dogstack we're using the terms `getter` and `selector` interchangably.
 
-`/dogs/getters.js`
-```js
-import { createSelector, createStructuredSelector } from 'reselect'
-import { prop } from 'ramda'
+#### What is a `getter`?
+From the [`reselect`](https://github.com/reactjs/reselect) docs:
+
+> 
+    - Getters can compute derived data, allowing Redux to store the minimal possible state.
+    - Getters are efficient. A getter is not recomputed unless one of its arguments change.
+    - Getters are composable. They can be used as input to other getters.
+
+If you're fimilar with creating a `mapStateToProps` function in most of your containers, think of a getter as a more efficient version.
+
+We use [`reselect`](https://github.com/reactjs/reselect) to create all of our getters
+
+Let's create a simple getter that gets every dog we have stored in state:
+
+```javascript
+// /dogs/getters.js
+import { createStructuredSelector } from 'reselect'
 
 export const getDogs = (state) => state.dogs
-export const getCurrentDogId = (state, props) => props.match.params.dogId
-
-export const getCurrentDog = createSelector(
-  getCurrentDogId,
-  getDogs,
-  prop
-)
 
 export const getIndexProps = createStructuredSelector({
   dogs: getDogs
 })
-
-
-export const getShowProps = createStructuredSelector({
-  dog: getCurrentDog
-})
 ```
+
+Next, let's use this getting in a container we create.
+
+### Create a container
+
+We use presentational and container components all through dogstack. If you're new to presentational and container components, or "dumb and smart" components go and read [this blog post](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) about the topic.
+
+```javascript
+// /dogs/containers/Dogs.js
+import { connect } from 'feathers-action-react'
+
+import Dogs from '../components/Dogs'
+
+import { actions as dogActions } from '../'
+
+import { getIndexProps } from '../getters'
+
+export default connect({
+  selector: getIndexProps,
+  actions: { dogs: dogActions },
+  query: {
+    service: 'dogs',
+    params: {}
+  }
+})(Dogs)
+```
+We're using [`feathers-action-react`](https://github.com/root-systems/feathers-action-react) to link up our feathers actions(CRUD) to our component using the getter we just created, and the actions we created previously.
+
+Next step is showing this data and using some of these CRUD actions.
+
+### Create a presentational component
+
+`dogs` and `actions` will be passed down form out container to this component.
+
+Let's add a button to add and remote a dog using those actions we passed down. At this this nothing is styled (we'll come to that later)
+
+Here's the file we'll be creating:
+
+```javascript
+// /dogs/components/Dogs.js
+import h from 'react-hyperscript'
+import dogNames from 'dog-names'
+import { mapObjIndexed, values, keys, pipe, prop } from 'ramda'
+import { FormattedMessage } from 'dogstack/intl'
+
+const mapDogs = mapObjIndexed((dog, key) => (
+  h('p', {}, prop('name', dog))
+))
+const mapDogsToValues = pipe(mapDogs, values)
+
+const Dogs = (props) => {
+  const { dogs, actions } = props
+
+  return (
+    h('div', {}, [
+      h('h1', {}, [
+        h(FormattedMessage, {
+          id: 'dogs.myDogs'
+        })
+      ]),
+      h('button', {
+        onClick: createDog
+      }, [
+        h(FormattedMessage, {
+          id: 'dogs.adoptDog'
+        })
+      ]),
+      h('button', {
+        onClick: removeDog
+      }, [
+        h(FormattedMessage, {
+          id: 'dogs.giveDog'
+        })
+      ]),
+      h('div', {}, [
+        mapDogsToValues(dogs)
+      ])
+    ])
+  )
+
+  function createDog () {
+    const name = dogNames.allRandom()
+    actions.dogs.create({ name })
+  }
+
+  function removeDog () {
+    const id = keys(dogs)[0]
+    actions.dogs.remove(id)
+  }
+}
+
+export default Dogs
+
+```
+
+There's two new things we've added here, the first is `ramda` and the second is how we use the `feathers-actions` actions.
+
+#### ramda
+
+If you're new to functional programming and ramda, take a look at this blog series [Thinking in Ramda.](http://randycoulman.com/blog/2016/05/24/thinking-in-ramda-getting-started/) It's a really great series that makes you more comfortable with ramda and some basics of functional programming.
+
+The learning curve of ramda and functional programming is quite steep, so don't worry if you're overwhelmed at this point. Like most things, a good way to lean is to start with the basics, then start to use more and more ramda and functional thinking.
+
+#### actions
+
+These are the same CRUD actions that we've created in `/dogs/index.js` from `feathers-action`
+
+You can see in our `createDog` function that we're using a `create` action along with creating a random dog name via the `dog-names` package to add a new dog to the database(and state)
+
+
+
+#### update routes
+
+Let's update our routes so that we can see what we've created:
+
+```javascript
+// /routes.js
+import { Route } from 'react-router-dom'
+import React from 'react'
+
+import Dogs from './dogs/containers/Dogs'
+
+export default [
+  {
+    name: 'dog',
+    path: '/',
+    exact: true,
+    Component: Dogs,
+    navigation: {
+      title: 'dogs.dog',
+      icon: 'fa fa-paw'
+    }
+  }
+]
+
+```
+
+And add our headers and button titles to our `/app/locales/en.json` file
+
+```javascript
+  "dogs.myDogs": "My Dogs",
+  "dogs.adoptDog": "Adopt a dog!",
+  "dogs.giveDog": "Give A Dog To A Friend"
+```
+
+---
+Let's see what we've got so far by running `npm run dev`
+
+![step-2](https://i.imgur.com/RprCYyu.png)
+
+Great! The functionalty is there, but it doesn't look so great. Let's fix that by adding some styles using `fela`
+
+
+### Add styling to our presentational component
