@@ -551,7 +551,7 @@ There's two new things we've added here, the first is `ramda` and the second is 
 
 If you're new to functional programming and ramda, take a look at this blog series [Thinking in Ramda.](http://randycoulman.com/blog/2016/05/24/thinking-in-ramda-getting-started/) It's a really great series that makes you more comfortable with ramda and some basics of functional programming.
 
-The learning curve of ramda and functional programming is quite steep, so don't worry if you're overwhelmed at this point. Like most things, a good way to lean is to start with the basics, then start to use more and more ramda and functional thinking.
+The learning curve of ramda and functional programming is quite steep, so don't worry if you're overwhelmed at this point. Like most things, a good way to learn is to start with the basics, then start to use more and more ramda and functional thinking.
 
 #### actions
 
@@ -604,3 +604,136 @@ Great! The functionalty is there, but it doesn't look so great. Let's fix that b
 
 
 ### Add styling to our presentational component
+
+Let's create a styles file to make our Dogs component look a bit more pretty.
+
+You can read about how to use `combineRules` in the [`fela`](http://fela.js.org/docs/api/fela/combineRules.html) docs.
+
+```javascript=
+// /dogs/styles/Dogs.js
+
+import { combineRules } from 'fela'
+
+const spaceAbove = ({ theme }) => ({
+  marginTop: theme.space[2]
+})
+
+const container = () => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+})
+
+export default {
+  container: combineRules(container, ({ theme }) => ({
+    height: '100%',
+    backgroundColor: theme.colors.secondary3
+  })),
+  dogsContainer: combineRules(container, spaceAbove),
+  titleText: () => ({
+    textTransform: 'uppercase'
+  }),
+  buttonText: () => ({
+    textTransform: 'capitalize'
+  }),
+  adoptButton: combineRules(spaceAbove),
+  giveButton: combineRules(spaceAbove)
+}
+
+```
+
+
+
+[`recompose`](https://github.com/acdlite/recompose) users `compose` in this scenario helps us map our styles with help from [`fela`](https://github.com/rofrischmann/fela/blob/master/packages/react-fela/docs/connect.md) into props.
+
+We've also added class names from our syles file we just created and some emoji for some fun.
+
+
+```javascript=
+// /dogs/components/Dogs.js
+
+import h from 'react-hyperscript'
+import { connect as connectStyles } from 'react-fela'
+import { compose } from 'recompose'
+import dogNames from 'dog-names'
+import { mapObjIndexed, values, keys, pipe, prop } from 'ramda'
+import { FormattedMessage } from 'dogstack/intl'
+
+import styles from '../styles/Dogs'
+
+const mapDogs = mapObjIndexed((dog, key) => (
+  h('p', {}, [
+    h('i', {
+      className: 'em em-dog'
+    }),
+    h('span', {}, prop('name', dog)),
+    h('i', {
+      className: 'em em-dog'
+    })
+  ])
+))
+const mapDogsToValues = pipe(mapDogs, values)
+
+const Dogs = (props) => {
+  const { styles, dogs, actions } = props
+
+  return (
+    h('div', {
+      className: styles.container
+    }, [
+      h('h1', {
+        className: styles.title
+      }, [
+        h(FormattedMessage, {
+          id: 'dogs.myDogs',
+          className: styles.titleText
+        })
+      ]),
+      h('button', {
+        className: styles.adoptButton,
+        onClick: createDog
+      }, [
+        h(FormattedMessage, {
+          id: 'dogs.adoptDog',
+          className: styles.buttonText
+        })
+      ]),
+      h('button', {
+        className: styles.giveButton,
+        onClick: removeDog
+      }, [
+        h(FormattedMessage, {
+          id: 'dogs.giveDog',
+          className: styles.buttonText
+        })
+      ]),
+      h('div', {
+        className: styles.dogsContainer
+      }, [
+        mapDogsToValues(dogs)
+      ])
+    ])
+  )
+
+  function createDog () {
+    const name = dogNames.allRandom()
+    actions.dogs.create({ name })
+  }
+
+  function removeDog () {
+    const id = keys(dogs)[0]
+    actions.dogs.remove(id)
+  }
+}
+
+export default compose(
+  connectStyles(styles)
+)(Dogs)
+
+```
+
+### :tada: Fin :tada:
+
+And there we have it, a pretty, functional dog adopter. What more could you want?!
+
+We're still in the process of writing a guide like this for adding authentication to your dogstack app using [`dogstack-agents`](https://github.com/root-systems/dogstack-agents). But if you're keen to learn by reading code, then jump over to the `master` branch of our [`dostack-example` repo](https://github.com/root-systems/dogstack-example) to see how we're using it.
