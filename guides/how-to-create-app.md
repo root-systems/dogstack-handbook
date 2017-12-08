@@ -1,18 +1,5 @@
 # How to create a new `dogstack` app
 
-- fork example
-- clone forked example
-- walkthrough
-  - package.json
-  - README
-  - server.js
-  - service.js
-  - browser.js
-  - reducer.js
-  - client.js
-  - router.js
-- 
-
 ## Pre-requisites
 
 Before we begin, please ensure you have JavaScript ready to go:
